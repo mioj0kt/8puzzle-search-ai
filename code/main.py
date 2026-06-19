@@ -2,6 +2,7 @@ import time
 from puzzle.estados import Estado
 from algorithms.bfs import BFS
 from algorithms.dfs import DFS
+from algorithms.gulosa import Gulosa
 from algorithms.a_estrela import a_estrela
 from heuristics.fora_do_lugar import fora_do_lugar
 from heuristics.manhattan import distancia_manhattan
@@ -37,7 +38,7 @@ def menu(tabuleiro):
     return int(input("\nOpcao: "))
 
 def menu_heuristica():
-    print("\n--- Escolha a Heurística para o A* ---")
+    print("\n--- Escolha a Heurística para esse algoritmo ---")
     print("1 - Peças fora do lugar (Misplaced Tiles)")
     print("2 - Distância de Manhattan")
     print("3 - Distância Euclidiana")
@@ -116,11 +117,36 @@ def main():
         print("Busca Uniforme ainda não implementada.")
 
     elif opcao == 4:
-        print("Busca Gulosa ainda não implementada.")
+        op_heuristica = menu_heuristica()
+
+        funcao_heuristica = None
+        if op_heuristica == 1:
+            funcao_heuristica = fora_do_lugar
+        elif op_heuristica == 2:
+            funcao_heuristica = distancia_manhattan
+        elif op_heuristica == 3:
+            funcao_heuristica = distancia_euclidiana
+        else:
+            print("Opção de heurística inválida.")
+            return
+
+        inicio = time.perf_counter()
+
+        solucao, nos_visitados = Gulosa.buscar(estado_inicial, funcao_heuristica)
+
+        fim = time.perf_counter()
+        tempo_execucao = fim - inicio # tempo de execução do algoritmo 
+
+        if solucao:
+            caminho = Gulosa.reconstruir_caminho(solucao)
+            mostrar_caminho(caminho)
+            exibir_estatisticas(nos_visitados, solucao.profundidade, tempo_execucao)
+        else:
+            print("Solução não encontrada.")
 
     elif opcao == 5:
         op_heuristica = menu_heuristica()
-        
+
         funcao_heuristica = None
         if op_heuristica == 1:
             funcao_heuristica = fora_do_lugar
