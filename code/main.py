@@ -4,6 +4,7 @@ from algorithms.bfs import BFS
 from algorithms.dfs import DFS
 from algorithms.gulosa import Gulosa
 from algorithms.a_estrela import a_estrela
+from algorithms.uniforme import UCS
 from heuristics.fora_do_lugar import fora_do_lugar
 from heuristics.manhattan import distancia_manhattan
 from heuristics.euclidiana import distancia_euclidiana
@@ -114,7 +115,19 @@ def main():
         
 
     elif opcao == 3:
-        print("Busca Uniforme ainda não implementada.")
+        inicio = time.perf_counter()
+
+        solucao, nos_visitados = UCS.buscar(estado_inicial)
+
+        fim = time.perf_counter()
+        tempo_execucao = fim - inicio # tempo de execução do algoritmo
+
+        if solucao:
+            caminho = UCS.reconstruir_caminho(solucao)
+            mostrar_caminho(caminho, True)
+            exibir_estatisticas(nos_visitados, solucao.profundidade, tempo_execucao)
+        else:
+            print("Solução não encontrada.")
 
     elif opcao == 4:
         op_heuristica = menu_heuristica()
